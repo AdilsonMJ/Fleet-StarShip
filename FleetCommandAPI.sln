@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetCommandAPI", "FleetCommandAPI.csproj", "{80552657-BF35-4F3B-A682-7EF963558899}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80552657-BF35-4F3B-A682-7EF963558899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80552657-BF35-4F3B-A682-7EF963558899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80552657-BF35-4F3B-A682-7EF963558899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80552657-BF35-4F3B-A682-7EF963558899}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C5B14E1-8050-467B-931F-383EB4C6F6C3}
+	EndGlobalSection
+EndGlobal
