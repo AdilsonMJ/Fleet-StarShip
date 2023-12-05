@@ -4,6 +4,7 @@ using FleetCommandAPI.Integration;
 using FleetCommandAPI.Integration.Interface;
 using Microsoft.EntityFrameworkCore;
 using Refit;
+using Newtonsoft.Json;
 
 namespace FleetCommandAPI
 {
@@ -30,7 +31,11 @@ namespace FleetCommandAPI
                 c.BaseAddress = new Uri("https://swapi.dev/");
             });
 
+
+
             builder.Services.AddScoped<IStarshipIntegration, StartShipIntragration>();
+
+            builder.Services.AddControllers().AddNewtonsoftJson(opts => {opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;});
 
             var app = builder.Build();
 

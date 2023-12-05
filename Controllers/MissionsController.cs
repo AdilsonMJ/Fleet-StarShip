@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+
 using FleetCommandAPI.Data;
 using FleetCommandAPI.Model;
 using FleetCommandAPI.Model.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Refit;
+
 
 namespace FleetCommandAPI.Controllers
 {
@@ -19,9 +14,11 @@ namespace FleetCommandAPI.Controllers
 
         private readonly FleetStarShipsContext _fleetStarShipsContext;
 
+
         public MissionsController(FleetStarShipsContext fleetStarShipsContext)
         {
             _fleetStarShipsContext = fleetStarShipsContext;
+    
         }
 
         [HttpPost]
@@ -41,7 +38,9 @@ namespace FleetCommandAPI.Controllers
                 if (ship != null)
                 {
                     missions.starships.Add(ship);
-                } else {
+                }
+                else
+                {
                     return BadRequest($"The start Ship #{shipId} not exist!");
                 }
             }
@@ -50,6 +49,36 @@ namespace FleetCommandAPI.Controllers
             await _fleetStarShipsContext.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<MissionsModel>>> getAllMissions()
+        {
+            var missions = await _fleetStarShipsContext.missions.Include(c => c.starships).ToListAsync();
+
+            var missaionDto = missions.Select(m => new MissionReadDTO
+            {
+                Id = m.Id,
+                Title = m.Title,
+                Planet = m.Planet,
+                Goal = m.Goal,
+                starships = m.starships.Select(s => new StarshipReadDTO
+                {
+
+                    id = s.id,
+                    name = s.name,
+                    model = s.model,
+                    manufacturer = s.manufacturer, 
+                    link = Url.Action("getById", "Fleet",new {id = s.id}, Request.Scheme)
+    
+                }).ToList()
+            }).ToList();
+
+
+            return Ok(missaionDto);
+
+
+
         }
 
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FleetCommandAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class missions : Migration
+    public partial class migrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,6 +18,8 @@ namespace FleetCommandAPI.Migrations
                 name: "missions",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Planet = table.Column<string>(type: "longtext", nullable: false)
@@ -27,7 +29,7 @@ namespace FleetCommandAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_missions", x => x.Title);
+                    table.PrimaryKey("PK_missions", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -54,18 +56,17 @@ namespace FleetCommandAPI.Migrations
                 name: "MissionsModelStarShipModel",
                 columns: table => new
                 {
-                    missionsModelsTitle = table.Column<string>(type: "varchar(50)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    missionsModelsId = table.Column<int>(type: "int", nullable: false),
                     starshipsid = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MissionsModelStarShipModel", x => new { x.missionsModelsTitle, x.starshipsid });
+                    table.PrimaryKey("PK_MissionsModelStarShipModel", x => new { x.missionsModelsId, x.starshipsid });
                     table.ForeignKey(
-                        name: "FK_MissionsModelStarShipModel_missions_missionsModelsTitle",
-                        column: x => x.missionsModelsTitle,
+                        name: "FK_MissionsModelStarShipModel_missions_missionsModelsId",
+                        column: x => x.missionsModelsId,
                         principalTable: "missions",
-                        principalColumn: "Title",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MissionsModelStarShipModel_ships_starshipsid",

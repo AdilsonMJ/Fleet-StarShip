@@ -13,6 +13,7 @@ namespace FleetCommandAPI.Model
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id{get; set;}
 
         [Required]
         [MaxLength(50)]
@@ -24,8 +25,6 @@ namespace FleetCommandAPI.Model
         [Required]
         public string Goal { get; set; }
 
-        
-        [JsonIgnore]
         [MinLength(1)]
         public List<StarShipModel> starships { get; } = new List<StarShipModel>();
     }

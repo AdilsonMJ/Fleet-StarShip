@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FleetCommandAPI.Migrations
 {
     [DbContext(typeof(FleetStarShipsContext))]
-    [Migration("20231204174220_missions")]
-    partial class missions
+    [Migration("20231205171611_migrations")]
+    partial class migrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,10 +23,9 @@ namespace FleetCommandAPI.Migrations
 
             modelBuilder.Entity("FleetCommandAPI.Model.MissionsModel", b =>
                 {
-                    b.Property<string>("Title")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("int");
 
                     b.Property<string>("Goal")
                         .IsRequired()
@@ -36,7 +35,12 @@ namespace FleetCommandAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Title");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("missions");
                 });
@@ -66,13 +70,13 @@ namespace FleetCommandAPI.Migrations
 
             modelBuilder.Entity("MissionsModelStarShipModel", b =>
                 {
-                    b.Property<string>("missionsModelsTitle")
-                        .HasColumnType("varchar(50)");
+                    b.Property<int>("missionsModelsId")
+                        .HasColumnType("int");
 
                     b.Property<int>("starshipsid")
                         .HasColumnType("int");
 
-                    b.HasKey("missionsModelsTitle", "starshipsid");
+                    b.HasKey("missionsModelsId", "starshipsid");
 
                     b.HasIndex("starshipsid");
 
@@ -83,7 +87,7 @@ namespace FleetCommandAPI.Migrations
                 {
                     b.HasOne("FleetCommandAPI.Model.MissionsModel", null)
                         .WithMany()
-                        .HasForeignKey("missionsModelsTitle")
+                        .HasForeignKey("missionsModelsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

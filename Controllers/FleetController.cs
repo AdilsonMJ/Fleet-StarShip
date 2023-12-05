@@ -20,6 +20,7 @@ namespace FleetCommandAPI.Controllers
         private readonly IStarshipIntegration _startshipIntegration;
         private readonly FleetStarShipsContext _starshipContext;
 
+
         public FleetController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext)
         {
             _startshipIntegration = starshipIntegration;
@@ -148,9 +149,9 @@ namespace FleetCommandAPI.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             var starship = await _starshipContext.ships.FindAsync(id);
-            if(starship == null) return NotFound();
+            if (starship == null) return NotFound();
 
-             _starshipContext.ships.Remove(starship);
+            _starshipContext.ships.Remove(starship);
             await _starshipContext.SaveChangesAsync();
 
             return NoContent();

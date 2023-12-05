@@ -82,3 +82,4 @@ D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.AspNetCo
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Newtonsoft.Json.dll
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\FleetCommandAPI.sourcelink.json
