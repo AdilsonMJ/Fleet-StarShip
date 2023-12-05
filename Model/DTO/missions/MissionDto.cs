@@ -10,15 +10,15 @@ namespace FleetCommandAPI.Model.DTO
     {
         [Required(ErrorMessage = "The name is required!")]
         [MaxLength(50)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [Required(ErrorMessage = "The Planet is required!")]
         [MaxLength(25)]
-        public string Planet { set; get; }
+        public string? Planet { set; get; }
 
         [Required(ErrorMessage = "The goal is required!")]
         [MaxLength(30)]
-        public string Goal { get; set; }
+        public string? Goal { get; set; }
 
         [Required(ErrorMessage = "At least one starship is required!")]
         [MinLength(1)]

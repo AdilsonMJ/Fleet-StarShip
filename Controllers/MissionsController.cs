@@ -18,7 +18,7 @@ namespace FleetCommandAPI.Controllers
         public MissionsController(FleetStarShipsContext fleetStarShipsContext)
         {
             _fleetStarShipsContext = fleetStarShipsContext;
-    
+
         }
 
         [HttpPost]
@@ -68,9 +68,9 @@ namespace FleetCommandAPI.Controllers
                     id = s.id,
                     name = s.name,
                     model = s.model,
-                    manufacturer = s.manufacturer, 
-                    link = Url.Action("getById", "Fleet",new {id = s.id}, Request.Scheme)
-    
+                    manufacturer = s.manufacturer,
+                    link = Url.Action("getById", "Fleet", new { id = s.id }, Request.Scheme)
+
                 }).ToList()
             }).ToList();
 
@@ -81,6 +81,14 @@ namespace FleetCommandAPI.Controllers
 
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult> getById(int id)
+        {
+            var mission = await _fleetStarShipsContext.missions.FirstOrDefaultAsync(e => e.Id == id);
+            if(mission == null) return BadRequest();
 
+            return Ok(mission);
+        
+        }
     }
 }

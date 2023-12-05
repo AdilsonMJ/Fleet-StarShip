@@ -36,7 +36,26 @@ namespace FleetCommandAPI.Controllers
 
             if (existStarShips.Any())
             {
-                return Ok(existStarShips);
+
+
+                var starshipRead = existStarShips.Select(e => new StarshipReadToFleetDto
+                {
+                    id = e.id,
+                    name = e.name,
+                    model = e.model,
+                    manufacturer = e.manufacturer,
+                    missionsModels = e.missionsModels.Select(r => new MissionReadToFleetDTO
+                    {
+                        Id = r.Id,
+                        Title = r.Title,
+                        Planet = r.Planet,
+                        Goal = r.Goal,
+                        Link = Url.Action("getById", "Missions", new {id = r.Id}, Request.Scheme)
+                    }).ToList()
+
+                }).ToList();
+
+                return Ok(starshipRead);
             }
 
             var response = await _startshipIntegration.getAllStarships();

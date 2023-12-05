@@ -10,6 +10,6 @@ namespace FleetCommandAPI.Integration.Interface
     public interface IStarshipIntegration
     {
         Task<List<StarshipsResponse>> getAllStarships();
-        Task<StarshipsResponse> getStarshipById(string name);
+        Task<StarshipsResponse> getStarshipById(string id);
     }
 }
