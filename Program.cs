@@ -5,6 +5,7 @@ using FleetCommandAPI.Integration.Interface;
 using Microsoft.EntityFrameworkCore;
 using Refit;
 using Newtonsoft.Json;
+using FleetCommandAPI.Integration.Integration;
 
 namespace FleetCommandAPI
 {
@@ -26,14 +27,15 @@ namespace FleetCommandAPI
             builder.Services.AddDbContext<FleetStarShipsContext>(opts => opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 
-            builder.Services.AddRefitClient<Integration.Response.Refit.IStarshipsIntagrationRefit>().ConfigureHttpClient(c => 
+            builder.Services.AddRefitClient<Integration.Response.Refit.IAPIExternIntragration>().ConfigureHttpClient(c => 
             {
                 c.BaseAddress = new Uri("https://swapi.dev/");
             });
 
 
 
-            builder.Services.AddScoped<IStarshipIntegration, StartShipIntragration>();
+            builder.Services.AddScoped<IStarshipIntegration, StartshipIntegration>();
+            builder.Services.AddScoped<IPlanetIntegration, PlanetIntegration>();
 
             builder.Services.AddControllers().AddNewtonsoftJson(opts => {opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;});
 

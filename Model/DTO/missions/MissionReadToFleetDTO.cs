@@ -9,7 +9,9 @@ namespace FleetCommandAPI.Model.DTO
     {
         public int? Id {get; set;}
         public string? Title { get; set; }
-        public string? Planet { set; get; }
+        
+        public PlanetModel? Planet { set; get; }
+        
         public string? Goal { get; set; }
 
         public string? Link {get; set;}

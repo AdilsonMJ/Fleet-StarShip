@@ -7,12 +7,12 @@ using FleetCommandAPI.Integration.Response.Refit;
 
 namespace FleetCommandAPI.Integration
 {
-    public class StartShipIntragration : IStarshipIntegration
+    public class StartshipIntegration : IStarshipIntegration
     {
 
-        private readonly IStarshipsIntagrationRefit _starshipsIntagrationRefit;
+        private readonly IAPIExternIntragration _starshipsIntagrationRefit;
 
-        public StartShipIntragration(IStarshipsIntagrationRefit starshipsIntagrationRefit)
+        public StartshipIntegration(IAPIExternIntragration starshipsIntagrationRefit)
         {
             _starshipsIntagrationRefit = starshipsIntagrationRefit;
         }

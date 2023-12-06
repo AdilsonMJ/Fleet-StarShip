@@ -9,6 +9,7 @@ using FleetCommandAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
+using FleetCommandAPI.Model.DTO.Planet;
 
 
 namespace FleetCommandAPI.Controllers
@@ -18,13 +19,15 @@ namespace FleetCommandAPI.Controllers
     {
 
         private readonly IStarshipIntegration _startshipIntegration;
+        private readonly IPlanetIntegration _planetIntegration;
         private readonly FleetStarShipsContext _starshipContext;
 
 
-        public FleetController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext)
+        public FleetController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext, IPlanetIntegration planetIntegration)
         {
             _startshipIntegration = starshipIntegration;
             _starshipContext = fleetStarShipsContext;
+            _planetIntegration = planetIntegration;
         }
 
 
@@ -36,7 +39,6 @@ namespace FleetCommandAPI.Controllers
 
             if (existStarShips.Any())
             {
-
 
                 var starshipRead = existStarShips.Select(e => new StarshipReadToFleetDto
                 {
@@ -50,7 +52,7 @@ namespace FleetCommandAPI.Controllers
                         Title = r.Title,
                         Planet = r.Planet,
                         Goal = r.Goal,
-                        Link = Url.Action("getById", "Missions", new {id = r.Id}, Request.Scheme)
+                        Link = Url.Action("getById", "Missions", new { id = r.Id }, Request.Scheme)
                     }).ToList()
 
                 }).ToList();
