@@ -19,6 +19,6 @@ namespace FleetCommandAPI.Model.DTO
         public string? manufacturer { get; set; }
 
     
-        public List<MissionReadToFleetDTO>? missionsModels {get; set;} 
+        public List<MissionReadDTOWithoutList>? missionsModels {get; set;} 
     }
 }

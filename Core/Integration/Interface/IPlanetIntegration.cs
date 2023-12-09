@@ -8,6 +8,6 @@ namespace FleetCommandAPI.Integration.Interface
     public interface IPlanetIntegration
     {
         Task<List<Response.PlanetResponse>> getAllPlanet();
-        Task<Response.PlanetResponse> getPlanetById(string id);
+        Task<Response.PlanetResponse> getPlanetById(int id);
     }
 }

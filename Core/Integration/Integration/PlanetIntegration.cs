@@ -26,7 +26,7 @@ namespace FleetCommandAPI.Integration.Integration
             return null;
         }
 
-        public async Task<PlanetResponse> getPlanetById(string id)
+        public async Task<PlanetResponse> getPlanetById(int id)
         {
             var responde = await _planetIntegration.getPlanetById(id);
 

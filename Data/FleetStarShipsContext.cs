@@ -16,7 +16,7 @@ namespace FleetCommandAPI.Data
 
         public DbSet<MissionsModel> missions {get; set;}
 
-        public DbSet<PlanetModel> planetModel{get; set;}
+        public DbSet<PlanetModel> planet{get; set;}
         
             
     

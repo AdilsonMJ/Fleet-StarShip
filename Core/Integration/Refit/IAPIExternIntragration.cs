@@ -15,7 +15,7 @@ namespace FleetCommandAPI.Integration.Response.Refit
         Task<ApiResponse<ResultPlanet>> getAllPlanet();
 
         [Get("/api/planets/{id}?format=json")]
-        Task<ApiResponse<PlanetResponse>> getPlanetById(string id);
+        Task<ApiResponse<PlanetResponse>> getPlanetById(int id);
 
     }
 }

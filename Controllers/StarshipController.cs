@@ -15,7 +15,7 @@ using FleetCommandAPI.Model.DTO.Planet;
 namespace FleetCommandAPI.Controllers
 {
     [Route("[controller]")]
-    public class FleetController : Controller
+    public class StarshipController : Controller
     {
 
         private readonly IStarshipIntegration _startshipIntegration;
@@ -23,7 +23,7 @@ namespace FleetCommandAPI.Controllers
         private readonly FleetStarShipsContext _starshipContext;
 
 
-        public FleetController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext, IPlanetIntegration planetIntegration)
+        public StarshipController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext, IPlanetIntegration planetIntegration)
         {
             _startshipIntegration = starshipIntegration;
             _starshipContext = fleetStarShipsContext;
@@ -46,7 +46,7 @@ namespace FleetCommandAPI.Controllers
                     name = e.name,
                     model = e.model,
                     manufacturer = e.manufacturer,
-                    missionsModels = e.missionsModels.Select(r => new MissionReadToFleetDTO
+                    missionsModels = e.missionsModels.Select(r => new MissionReadDTOWithoutList
                     {
                         Id = r.Id,
                         Title = r.Title,
@@ -67,6 +67,7 @@ namespace FleetCommandAPI.Controllers
             }
 
 
+#pragma warning disable CS8604 // Possible null reference argument.
             var startShipSave = response.Select(r => new StarShipModel
             {
                 id = ExtractID.FromUrl(r.url),
@@ -74,6 +75,7 @@ namespace FleetCommandAPI.Controllers
                 model = r.model,
                 manufacturer = r.manufacturer
             }).ToList();
+#pragma warning restore CS8604 // Possible null reference argument.
 
 
             await _starshipContext.ships.AddRangeAsync(startShipSave);
@@ -113,7 +115,7 @@ namespace FleetCommandAPI.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> UpDateStarShipPatch(int id, JsonPatchDocument<StarshipDTO> patch)
+        public async Task<ActionResult> UpDateStarShipPatch(int id, [FromBody] JsonPatchDocument<StarshipDTO> patch)
         {
 
             var starShip = await _starshipContext.ships.FirstOrDefaultAsync(c => c.id == id);
@@ -132,13 +134,13 @@ namespace FleetCommandAPI.Controllers
             if (!TryValidateModel(starshipDTO)) return ValidationProblem(ModelState);
 
 
-            StarShipModel starShipModel = new StarShipModel
-            {
-                id = starshipDTO.id,
-                name = starshipDTO.name,
-                manufacturer = starshipDTO.manufacturer,
-                model = starshipDTO.model
-            };
+
+            starShip.id = starshipDTO.id;
+            starShip.name = starshipDTO.name;
+            starShip.manufacturer = starshipDTO.manufacturer;
+            starShip.model = starshipDTO.model;
+
+
 
             await _starshipContext.SaveChangesAsync();
             return NoContent();
@@ -148,19 +150,16 @@ namespace FleetCommandAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpDatestarship(int id, [FromBody] StarshipDTO starshipDto)
         {
-            var starship = _starshipContext.ships.FirstOrDefaultAsync(c => c.id == id);
+            var starship = await _starshipContext.ships.FirstOrDefaultAsync(c => c.id == id);
             if (starship == null) return NotFound();
 
-            StarShipModel starShipModel = new StarShipModel
-            {
-                id = id,
-                name = starshipDto.name,
-                model = starshipDto.model,
-                manufacturer = starshipDto.manufacturer
-            };
+            
+                starship.id = id;
+                starship.name = starshipDto.name;
+                starship.model = starshipDto.model;
+                starship.manufacturer = starshipDto.manufacturer;
 
-            await _starshipContext.AddRangeAsync();
-
+            await _starshipContext.SaveChangesAsync();
             return NoContent();
 
         }
