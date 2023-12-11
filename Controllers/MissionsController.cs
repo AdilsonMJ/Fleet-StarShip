@@ -1,10 +1,11 @@
 
+using FleetCommandAPI.Core.Model.Maps;
 using FleetCommandAPI.Data;
 using FleetCommandAPI.Model;
 using FleetCommandAPI.Model.DTO;
-using FleetCommandAPI.Model.DTO.Planet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 
 namespace FleetCommandAPI.Controllers
@@ -15,10 +16,10 @@ namespace FleetCommandAPI.Controllers
 
         private readonly FleetStarShipsContext _fleetStarShipsContext;
 
-
         public MissionsController(FleetStarShipsContext fleetStarShipsContext)
         {
             _fleetStarShipsContext = fleetStarShipsContext;
+
 
         }
 
@@ -28,15 +29,9 @@ namespace FleetCommandAPI.Controllers
 
             var planet = await _fleetStarShipsContext.planet.FirstOrDefaultAsync(p => p.id == missaionDto.Planet.id);
 
-            if(planet == null) return NotFound();
+            if (planet == null) return NotFound();
 
-            MissionsModel missions = new MissionsModel
-            {
-                Title = missaionDto.Title,
-                Planet = planet,
-                Goal = missaionDto.Goal,
-            };
-
+            MissionsModel missions = MissionsMaps.missionDtoToMissionModel(missaionDto, planet);
             foreach (int shipId in missaionDto.starshipsId)
             {
                 var ship = await _fleetStarShipsContext.ships.FindAsync(shipId);
@@ -50,6 +45,7 @@ namespace FleetCommandAPI.Controllers
                 }
             }
 
+
             await _fleetStarShipsContext.missions.AddAsync(missions);
             await _fleetStarShipsContext.SaveChangesAsync();
 
@@ -60,31 +56,20 @@ namespace FleetCommandAPI.Controllers
         public async Task<ActionResult<List<MissionsModel>>> getAllMissions()
         {
             var missions = await _fleetStarShipsContext.missions.Include(c => c.starships).Include(p => p.Planet).ToListAsync();
-            var missaionDto = missions.Select(m => new MissionReadDTO
+
+            var missaionReadDTO = MissionsMaps.missionModelToMissionReadDTO(missions);
+
+            foreach (var m in missaionReadDTO)
             {
-                Id = m.Id,
-                Title = m.Title,
-                Planet = new PlanetReadDTO {
-                    id = m.Planet.id,
-                    Name = m.Planet.Name,
-                    Url = Url.Action("getById", "Planet", new { id = m.Planet.id }, Request.Scheme)
-                },
-                Goal = m.Goal,
-                starships = m.starships.Select(s => new StarshipReadDTO
+                m.Planet.Url = Url.Action("getById", "Planet", new { id = m.Planet.id }, Request.Scheme);
+
+                foreach (var s in m.starships)
                 {
-                    id = s.id,
-                    name = s.name,
-                    model = s.model,
-                    manufacturer = s.manufacturer,
-                    link = Url.Action("getById", "Starship", new { id = s.id }, Request.Scheme)
+                    s.link = Url.Action("getById", "Starship", new { id = s.id }, Request.Scheme);
+                }
+            }
 
-                }).ToList()
-            }).ToList();
-
-
-            return Ok(missaionDto);
-
-
+            return Ok(missaionReadDTO);
 
         }
 
@@ -92,33 +77,19 @@ namespace FleetCommandAPI.Controllers
         public async Task<ActionResult> getById(int id)
         {
             var mission = await _fleetStarShipsContext.missions.Include(s => s.starships).Include(p => p.Planet).FirstOrDefaultAsync(e => e.Id == id);
-            if(mission == null) return BadRequest();
+            if (mission == null) return BadRequest();
 
+            var missionReadDTO = MissionsMaps.missionModelToMissionReadDTO(mission);
 
-            var missionDto = new MissionReadDTO
+            mission.Planet.Url = Url.Action("getById", "Planet", new { id = mission.Planet.id });
+
+            foreach (var s in missionReadDTO.starships)
             {
-                Id = mission.Id,
-                Title = mission.Title,
-                Planet = new PlanetReadDTO {
-                    id = mission.Planet.id,
-                    Name = mission.Planet.Name,
-                    Url = Url.Action("getById", "Planet", new { id = mission.Planet.id }, Request.Scheme)
-                },
-                Goal = mission.Goal,
-                starships = mission.starships.Select(s => new StarshipReadDTO
-                {
-                    id = s.id,
-                    name = s.name,
-                    model = s.model,
-                    manufacturer = s.manufacturer,
-                    link = Url.Action("getById", "Starship", new { id = s.id }, Request.Scheme)
+                s.link = Url.Action("getById", "Starship", new { id = s.id }, Request.Scheme);
+            }
 
-                }).ToList()
-            };
+            return Ok(missionReadDTO);
 
-
-            return Ok(missionDto);
-        
         }
     }
 }
