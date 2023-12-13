@@ -3,9 +3,16 @@ using FleetCommandAPI.Data;
 using FleetCommandAPI.Integration;
 using FleetCommandAPI.Integration.Interface;
 using Microsoft.EntityFrameworkCore;
-using Refit;
+using FleetCommandAPI.Integration.Response.Refit;
 using Newtonsoft.Json;
 using FleetCommandAPI.Integration.Integration;
+using FleetCommandAPI.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Refit;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using FleetCommandAPI.Core.Entity.Maps;
+using FleetCommandAPI.Core.Model.Maps;
 
 namespace FleetCommandAPI
 {
@@ -27,7 +34,7 @@ namespace FleetCommandAPI
             builder.Services.AddDbContext<FleetStarShipsContext>(opts => opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 
-            builder.Services.AddRefitClient<Integration.Response.Refit.IAPIExternIntragration>().ConfigureHttpClient(c => 
+            builder.Services.AddRefitClient<Integration.Response.Refit.IAPIExternIntragration>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri("https://swapi.dev/");
             });
@@ -36,8 +43,23 @@ namespace FleetCommandAPI
 
             builder.Services.AddScoped<IStarshipIntegration, StartshipIntegration>();
             builder.Services.AddScoped<IPlanetIntegration, PlanetIntegration>();
+            builder.Services.AddScoped<ILinkService, LinkService>();
+            builder.Services.AddScoped<IMissionsMap, MissionsMaps>();
+            builder.Services.AddScoped<IPlanetMaps, PlanetMaps>();
 
-            builder.Services.AddControllers().AddNewtonsoftJson(opts => {opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;});
+
+
+            // To use URLHELPER
+            builder.Services.AddSingleton<Microsoft.AspNetCore.Mvc.Infrastructure.IActionContextAccessor, ActionContextAccessor>();
+            builder.Services.AddScoped<IUrlHelper>(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
+
+
+            builder.Services.AddControllers().AddNewtonsoftJson(opts => { opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; });
 
             var app = builder.Build();
 

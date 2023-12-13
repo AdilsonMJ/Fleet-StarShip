@@ -10,6 +10,10 @@ namespace FleetCommandAPI.Data
 {
     public class FleetStarShipsContext : DbContext
     {
+        public FleetStarShipsContext()
+        {
+        }
+
         public FleetStarShipsContext(DbContextOptions<FleetStarShipsContext> opts): base(opts){}
         
         public DbSet<StarShipModel> ships { get; set;}

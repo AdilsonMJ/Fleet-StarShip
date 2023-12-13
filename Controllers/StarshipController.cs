@@ -9,7 +9,7 @@ using FleetCommandAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
-using FleetCommandAPI.Model.DTO.Planet;
+
 
 
 namespace FleetCommandAPI.Controllers
@@ -52,7 +52,7 @@ namespace FleetCommandAPI.Controllers
                         Title = r.Title,
                         Planet = r.Planet,
                         Goal = r.Goal,
-                        Link = Url.Action("getById", "Missions", new { id = r.Id }, Request.Scheme)
+                        Url = Url.Action("getById", "Missions", new { id = r.Id }, Request.Scheme)
                     }).ToList()
 
                 }).ToList();
