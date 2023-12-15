@@ -9,7 +9,7 @@ using FleetCommandAPI.Integration.Response.Refit;
 
 namespace FleetCommandAPI.Model
 {
-    public class StarShipModel 
+    public class StarshipModel 
     {
 
         [Key]

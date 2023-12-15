@@ -1,15 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using FleetCommandAPI.Core.Entity.Maps;
 using FleetCommandAPI.Data;
 using FleetCommandAPI.Integration.Interface;
-using FleetCommandAPI.Model;
-using FleetCommandAPI.Model.DTO;
-using FleetCommandAPI.Model.DTO.Planet;
-using FleetCommandAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +24,6 @@ namespace FleetCommandAPI.Controllers
         {
 
             var response = await _fleetStarShipsContext.planet.Include(c => c.missions).ToListAsync();
-
             var planets = _planetMaps.planetModelToPlanetReadDTO(response);
 
             return Ok(planets);
@@ -45,7 +35,6 @@ namespace FleetCommandAPI.Controllers
         {
             var response = await _planetIntegration.getAllPlanet();
             if (response == null) return BadRequest();
-
             var planetModels = _planetMaps.planetResponseToPlanetModel(response);
 
             await _fleetStarShipsContext.planet.AddRangeAsync(planetModels);
@@ -58,8 +47,6 @@ namespace FleetCommandAPI.Controllers
         {
             var response = await _fleetStarShipsContext.planet.Include(m => m.missions).FirstOrDefaultAsync(p => p.id == id);
             if (response == null) return NotFound();
-
-
             var planet = _planetMaps.planetModelToPlanetReadDto(response);
             
             return Ok(planet);

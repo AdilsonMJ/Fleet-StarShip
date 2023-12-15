@@ -26,6 +26,6 @@ namespace FleetCommandAPI.Model
         public string Goal { get; set; }
 
         [MinLength(1)]
-        public List<StarShipModel> starships { get; } = new List<StarShipModel>();
+        public List<StarshipModel> starships { get; } = new List<StarshipModel>();
     }
 }

@@ -11,15 +11,15 @@ namespace FleetCommandAPI.Model.DTO.Planet
     {
         public int? id { get; set; }
         public string? Name { get; set; }
-         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? Population { get; set; }
-         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? Terrain { get; set; }
-         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-         
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
         public string? Url { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<MissionReadDTOWithoutList>? missions { get; set;}
+        public List<MissionReadDTOWithoutList>? missions { get; set; }
     }
 }

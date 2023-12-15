@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FleetCommandAPI.Model.DTO
 {
-    public class StarshipReadToFleetDto
+    public class StarshipReadWithouListDto
     {
          public int? id{get; set;} 
 

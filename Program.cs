@@ -13,6 +13,7 @@ using Refit;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using FleetCommandAPI.Core.Entity.Maps;
 using FleetCommandAPI.Core.Model.Maps;
+using FleetCommandAPI.Core.Entity.Maps.Interface;
 
 namespace FleetCommandAPI
 {
@@ -44,8 +45,10 @@ namespace FleetCommandAPI
             builder.Services.AddScoped<IStarshipIntegration, StartshipIntegration>();
             builder.Services.AddScoped<IPlanetIntegration, PlanetIntegration>();
             builder.Services.AddScoped<ILinkService, LinkService>();
-            builder.Services.AddScoped<IMissionsMap, MissionsMaps>();
+            builder.Services.AddScoped<IMissionsMap, MissionsMap>();
             builder.Services.AddScoped<IPlanetMaps, PlanetMaps>();
+            builder.Services.AddScoped<IStarshipMap, StarshipMap>();
+            
 
 
 

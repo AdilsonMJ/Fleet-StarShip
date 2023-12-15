@@ -61,18 +61,6 @@ namespace FleetCommandAPI.Controllers
         {
             var missions = await _fleetStarShipsContext.missions.Include(c => c.starships).Include(p => p.Planet).ToListAsync();
 
-            // var missaionReadDTO = MissionsMaps.missionModelToMissionReadDTO(missions);
-
-            // foreach (var m in missaionReadDTO)
-            // {
-            //     m.Planet.Url = Url.Action("getById", "Planet", new { id = m.Planet.id }, Request.Scheme);
-
-            //     foreach (var s in m.starships)
-            //     {
-            //         s.link = Url.Action("getById", "Starship", new { id = s.id }, Request.Scheme);
-            //     }
-            // }
-
             var missaionReadDTO = _missionsMap.missionModelToMissionReadDTO(missions);
 
             return Ok(missaionReadDTO);
@@ -84,15 +72,6 @@ namespace FleetCommandAPI.Controllers
         {
             var mission = await _fleetStarShipsContext.missions.Include(s => s.starships).Include(p => p.Planet).FirstOrDefaultAsync(e => e.Id == id);
             if (mission == null) return BadRequest();
-
-            // var missionReadDTO = MissionsMaps.missionModelToMissionReadDTO(mission);
-
-            // mission.Planet.Url = Url.Action("getById", "Planet", new { id = mission.Planet.id });
-
-            // foreach (var s in missionReadDTO.starships)
-            // {
-            //     s.link = Url.Action("getById", "Starship", new { id = s.id }, Request.Scheme);
-            // }
 
             var missionReadDTO = _missionsMap.missionModelToMissionReadDTO(mission);
 

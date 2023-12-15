@@ -1,5 +1,3 @@
-
-using Azure;
 using FleetCommandAPI.Data;
 using FleetCommandAPI.Integration.Interface;
 using FleetCommandAPI.Integration.Response.Refit;
@@ -9,6 +7,7 @@ using FleetCommandAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
+using FleetCommandAPI.Core.Entity.Maps.Interface;
 
 
 
@@ -21,13 +20,15 @@ namespace FleetCommandAPI.Controllers
         private readonly IStarshipIntegration _startshipIntegration;
         private readonly IPlanetIntegration _planetIntegration;
         private readonly FleetStarShipsContext _starshipContext;
+        private readonly IStarshipMap _starshipMap;
 
 
-        public StarshipController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext, IPlanetIntegration planetIntegration)
+        public StarshipController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext, IPlanetIntegration planetIntegration, IStarshipMap starshipMap)
         {
             _startshipIntegration = starshipIntegration;
             _starshipContext = fleetStarShipsContext;
             _planetIntegration = planetIntegration;
+            _starshipMap = starshipMap;
         }
 
 
@@ -35,53 +36,16 @@ namespace FleetCommandAPI.Controllers
         public async Task<ActionResult<List<StarshipsResponse>>> getAllStarships()
         {
 
-            var existStarShips = await _starshipContext.ships.Include(c => c.missionsModels).ToListAsync();
-
-            if (existStarShips.Any())
+            try
             {
-
-                var starshipRead = existStarShips.Select(e => new StarshipReadToFleetDto
-                {
-                    id = e.id,
-                    name = e.name,
-                    model = e.model,
-                    manufacturer = e.manufacturer,
-                    missionsModels = e.missionsModels.Select(r => new MissionReadDTOWithoutList
-                    {
-                        Id = r.Id,
-                        Title = r.Title,
-                        Planet = r.Planet,
-                        Goal = r.Goal,
-                        Url = Url.Action("getById", "Missions", new { id = r.Id }, Request.Scheme)
-                    }).ToList()
-
-                }).ToList();
-
+                var existStarShips = await _starshipContext.ships.Include(c => c.missionsModels).ToListAsync();
+                var starshipRead = _starshipMap.starshipModelToStarshipReadWithouListDto(existStarShips);
                 return Ok(starshipRead);
             }
-
-            var response = await _startshipIntegration.getAllStarships();
-            if (response == null)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest("Error accessing the database when retrieving all starships.");
             }
-
-
-#pragma warning disable CS8604 // Possible null reference argument.
-            var startShipSave = response.Select(r => new StarShipModel
-            {
-                id = ExtractID.FromUrl(r.url),
-                name = r.name,
-                model = r.model,
-                manufacturer = r.manufacturer
-            }).ToList();
-#pragma warning restore CS8604 // Possible null reference argument.
-
-
-            await _starshipContext.ships.AddRangeAsync(startShipSave);
-            await _starshipContext.SaveChangesAsync();
-
-            return Ok(response);
         }
 
         [HttpPost]
@@ -89,19 +53,9 @@ namespace FleetCommandAPI.Controllers
         {
             starshipDTO.id = new Random().Next(100, int.MaxValue);
 
-            StarShipModel starShipModel = new StarShipModel
-            {
-                id = new Random().Next(100, int.MaxValue),
-                name = starshipDTO.name,
-                model = starshipDTO.model,
-                manufacturer = starshipDTO.manufacturer
-            };
-
+            StarshipModel starShipModel = _starshipMap.StarshipDtoToStarshipModel(starshipDTO);
             await _starshipContext.AddAsync(starShipModel);
             await _starshipContext.SaveChangesAsync();
-
-
-
             return CreatedAtAction(nameof(getById), new { id = starShipModel.id }, starShipModel);
         }
 
@@ -110,8 +64,9 @@ namespace FleetCommandAPI.Controllers
         public async Task<ActionResult> getById(int id)
         {
             var starShip = await _starshipContext.ships.Include(s => s.missionsModels).FirstOrDefaultAsync(c => c.id == id);
-            if (starShip == null) return BadRequest();
-            return Ok(starShip);
+            if (starShip == null) return NotFound();
+            var starshipRead = _starshipMap.StarshipModelToStarshipReadDto(starShip);
+            return Ok(starshipRead);
         }
 
         [HttpPatch("{id}")]
@@ -122,25 +77,14 @@ namespace FleetCommandAPI.Controllers
             if (starShip == null) return NotFound();
 
 
-            StarshipDTO starshipDTO = new StarshipDTO
-            {
-                id = starShip.id,
-                name = starShip.name,
-                manufacturer = starShip.manufacturer,
-                model = starShip.model
-            };
-
+            StarshipDTO starshipDTO = _starshipMap.starshipModelToStarshipDto(starShip);
             patch.ApplyTo(starshipDTO, ModelState);
             if (!TryValidateModel(starshipDTO)) return ValidationProblem(ModelState);
-
-
 
             starShip.id = starshipDTO.id;
             starShip.name = starshipDTO.name;
             starShip.manufacturer = starshipDTO.manufacturer;
             starShip.model = starshipDTO.model;
-
-
 
             await _starshipContext.SaveChangesAsync();
             return NoContent();
@@ -153,11 +97,11 @@ namespace FleetCommandAPI.Controllers
             var starship = await _starshipContext.ships.FirstOrDefaultAsync(c => c.id == id);
             if (starship == null) return NotFound();
 
-            
-                starship.id = id;
-                starship.name = starshipDto.name;
-                starship.model = starshipDto.model;
-                starship.manufacturer = starshipDto.manufacturer;
+
+            starship.id = id;
+            starship.name = starshipDto.name;
+            starship.model = starshipDto.model;
+            starship.manufacturer = starshipDto.manufacturer;
 
             await _starshipContext.SaveChangesAsync();
             return NoContent();
@@ -178,5 +122,25 @@ namespace FleetCommandAPI.Controllers
 
         }
 
+
+
+        [HttpGet("import-data")]
+        public async Task<ActionResult> importData()
+        {
+
+            var response = await _startshipIntegration.getAllStarships();
+            if (response == null)
+            {
+                return BadRequest();
+            }
+
+
+            var startShipSave = _starshipMap.starshipResponseToStarshipModel(response);
+
+            await _starshipContext.ships.AddRangeAsync(startShipSave);
+            await _starshipContext.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

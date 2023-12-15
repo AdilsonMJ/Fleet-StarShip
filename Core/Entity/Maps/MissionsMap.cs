@@ -7,13 +7,13 @@ using FleetCommandAPI.Utils;
 
 namespace FleetCommandAPI.Core.Model.Maps
 {
-    public class MissionsMaps : IMissionsMap
+    public class MissionsMap : IMissionsMap
     {
         
 
         private readonly ILinkService _linkService;
 
-        public MissionsMaps(ILinkService linkService)
+        public MissionsMap(ILinkService linkService)
         {
             _linkService = linkService;
         }

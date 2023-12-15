@@ -16,7 +16,7 @@ namespace FleetCommandAPI.Data
 
         public FleetStarShipsContext(DbContextOptions<FleetStarShipsContext> opts): base(opts){}
         
-        public DbSet<StarShipModel> ships { get; set;}
+        public DbSet<StarshipModel> ships { get; set;}
 
         public DbSet<MissionsModel> missions {get; set;}
 

@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FleetCommandAPI.Integration.Response;
 using FleetCommandAPI.Model;
 using FleetCommandAPI.Model.DTO;
 using FleetCommandAPI.Model.DTO.Planet;
 using FleetCommandAPI.Utils;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FleetCommandAPI.Core.Entity.Maps
 {
@@ -15,14 +10,10 @@ namespace FleetCommandAPI.Core.Entity.Maps
     {
 
         private readonly ILinkService _linkService;
-
-
         public PlanetMaps(ILinkService linkService)
         {
             _linkService = linkService;
         }
-
-
         public List<PlanetReadDTO> planetModelToPlanetReadDTO(List<PlanetModel> planetModels)
         {
             var planet = planetModels.Select(p => new PlanetReadDTO
@@ -64,8 +55,6 @@ namespace FleetCommandAPI.Core.Entity.Maps
                 }).ToList()
 
             };
-
-
             return planet;
         }
 

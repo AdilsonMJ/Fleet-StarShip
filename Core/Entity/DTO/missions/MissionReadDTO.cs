@@ -20,6 +20,6 @@ namespace FleetCommandAPI.Model.DTO
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? Url {get;set;}
 
-        public List<StarshipReadDTO>? starships  {get; set;} = new List<StarshipReadDTO>(); 
+        public List<StarshipReadDTO>? starships  {get; set;}
     }
 }
