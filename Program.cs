@@ -55,16 +55,14 @@ namespace FleetCommandAPI
             builder.Services.AddScoped<IPlanetMaps, PlanetMaps>();
             builder.Services.AddScoped<IStarshipMap, StarshipMap>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<TokenService>();
 
             builder.Services.AddIdentity<UserModel, IdentityRole>()
             .AddEntityFrameworkStores<UserDbContext>()
             .AddDefaultTokenProviders();
             
-
-
-
             // To use URLHELPER
-            builder.Services.AddSingleton<Microsoft.AspNetCore.Mvc.Infrastructure.IActionContextAccessor, ActionContextAccessor>();
+            builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             builder.Services.AddScoped<IUrlHelper>(x =>
             {
                 var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;

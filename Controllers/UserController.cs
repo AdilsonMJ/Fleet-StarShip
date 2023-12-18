@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FleetCommandAPI.Core.Entity.User.DTO;
 using FleetCommandAPI.Core.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +11,10 @@ namespace FleetCommandAPI.Controllers
 
         private readonly UserService _userService;
 
-        public UserController(UserService userService)
+        public UserController(UserService userService )
         {
             _userService = userService;
+            
         }
 
 
@@ -29,10 +26,19 @@ namespace FleetCommandAPI.Controllers
             if (!result.Succeeded)
             {
                 var erros = result.Errors.Select(e => e.Description);
-                return BadRequest(new {Errors = erros});
+                return BadRequest(new { Errors = erros });
             }
 
             return NoContent();
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            var token = await _userService.Login(loginDto);
+
+            return Ok(token);
+        
         }
     }
 }
