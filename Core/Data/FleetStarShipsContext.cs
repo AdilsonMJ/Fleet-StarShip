@@ -22,7 +22,5 @@ namespace FleetCommandAPI.Data
 
         public DbSet<PlanetModel> planet{get; set;}
         
-            
-    
     }
 }

@@ -82,3 +82,9 @@ D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\refint\Domain.dll
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.pdb
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.genruntimeconfig.cache
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\ref\Domain.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.Extensions.Options.dll

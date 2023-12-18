@@ -14,6 +14,10 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using FleetCommandAPI.Core.Entity.Maps;
 using FleetCommandAPI.Core.Model.Maps;
 using FleetCommandAPI.Core.Entity.Maps.Interface;
+using FleetCommandAPI.Core.Services;
+using FleetCommandAPI.Core.Entity.User;
+using Microsoft.AspNetCore.Identity;
+using FleetCommandAPI.Core.Data;
 
 namespace FleetCommandAPI
 {
@@ -32,10 +36,12 @@ namespace FleetCommandAPI
 
 
             var connectionString = builder.Configuration.GetConnectionString("StarShipConnection");
+            var connectionStringUser = builder.Configuration.GetConnectionString("UserConnection");
             builder.Services.AddDbContext<FleetStarShipsContext>(opts => opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+            builder.Services.AddDbContext<UserDbContext>(opts => opts.UseMySql(connectionStringUser, ServerVersion.AutoDetect(connectionStringUser)));
 
 
-            builder.Services.AddRefitClient<Integration.Response.Refit.IAPIExternIntragration>().ConfigureHttpClient(c =>
+            builder.Services.AddRefitClient<IAPIExternIntragration>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri("https://swapi.dev/");
             });
@@ -48,6 +54,11 @@ namespace FleetCommandAPI
             builder.Services.AddScoped<IMissionsMap, MissionsMap>();
             builder.Services.AddScoped<IPlanetMaps, PlanetMaps>();
             builder.Services.AddScoped<IStarshipMap, StarshipMap>();
+            builder.Services.AddScoped<UserService>();
+
+            builder.Services.AddIdentity<UserModel, IdentityRole>()
+            .AddEntityFrameworkStores<UserDbContext>()
+            .AddDefaultTokenProviders();
             
 
 
