@@ -18,16 +18,16 @@ namespace FleetCommandAPI.Core.Entity.Maps
         }
 
 
-        public List<StarshipReadWithouListDto> starshipModelToStarshipReadWithouListDto(List<StarshipModel> starshipModels)
+       public IEnumerable<StarshipReadWithMissions> starshipModelToStarshipReadWithMissions(List<StarshipModel> starshipModels)
         {
 
-            var starshipRead = starshipModels.Select(e => new StarshipReadWithouListDto
+            var starshipRead = starshipModels.Select(e => new StarshipReadWithMissions
             {
                 id = e.id,
                 name = e.name,
                 model = e.model,
                 manufacturer = e.manufacturer,
-                missionsModels = e.missionsModels.Select(r => new MissionReadDTOWithoutList
+                missionsModels = e.missionsModels.Select(r => new MissionReadDTO
                 {
                     Id = r.Id,
                     Title = r.Title,

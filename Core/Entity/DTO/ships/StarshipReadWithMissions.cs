@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace FleetCommandAPI.Model.DTO
 {
-    public class StarshipReadWithouListDto
+    public class StarshipReadWithMissions
     {
          public int? id{get; set;} 
 
@@ -18,7 +13,7 @@ namespace FleetCommandAPI.Model.DTO
        
         public string? manufacturer { get; set; }
 
-    
-        public List<MissionReadDTOWithoutList>? missionsModels {get; set;} 
+        
+        public List<MissionReadDTO>? missionsModels {get; set;} 
     }
 }

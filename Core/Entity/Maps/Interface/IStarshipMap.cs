@@ -10,7 +10,7 @@ namespace FleetCommandAPI.Core.Entity.Maps.Interface
 {
     public interface IStarshipMap
     {
-        List<StarshipReadWithouListDto> starshipModelToStarshipReadWithouListDto(List<StarshipModel> starshipModels);
+        IEnumerable<StarshipReadWithMissions> starshipModelToStarshipReadWithMissions(List<StarshipModel> starshipModels);
 
         List<StarshipModel> starshipResponseToStarshipModel (List<StarshipsResponse> starshipsResponses);
 

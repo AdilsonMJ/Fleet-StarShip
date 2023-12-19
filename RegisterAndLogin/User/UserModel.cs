@@ -8,7 +8,7 @@ namespace FleetCommandAPI.Core.Entity.User
 {
     public class UserModel : IdentityUser
     {
-        
+        public string Authorization{get ; set;}
         public UserModel() : base(){}
         
     }

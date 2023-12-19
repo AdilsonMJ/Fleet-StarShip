@@ -18,6 +18,12 @@ using FleetCommandAPI.Core.Services;
 using FleetCommandAPI.Core.Entity.User;
 using Microsoft.AspNetCore.Identity;
 using FleetCommandAPI.Core.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using FleetCommandAPI.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using FleetCommandAPI.Core.Repository;
 
 namespace FleetCommandAPI
 {
@@ -56,11 +62,13 @@ namespace FleetCommandAPI
             builder.Services.AddScoped<IStarshipMap, StarshipMap>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<TokenService>();
+            builder.Services.AddScoped<IAuthorizationHandler, LoadDataAuthorization>();
+            builder.Services.AddScoped<IStarshipRepository, StarshipRepositoryImpl>();
 
             builder.Services.AddIdentity<UserModel, IdentityRole>()
             .AddEntityFrameworkStores<UserDbContext>()
             .AddDefaultTokenProviders();
-            
+
             // To use URLHELPER
             builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             builder.Services.AddScoped<IUrlHelper>(x =>
@@ -73,6 +81,27 @@ namespace FleetCommandAPI
 
             builder.Services.AddControllers().AddNewtonsoftJson(opts => { opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; });
 
+
+            builder.Services.AddAuthentication(opts =>
+            {
+                opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opts =>
+            {
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("pulacavaloeboipulacowboypulacavaloeboipulacowboy")),
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ClockSkew = TimeSpan.Zero
+                };  
+            });
+
+
+            builder.Services.AddAuthorization(opts => {
+                opts.AddPolicy("Adm-Master", policy => policy.AddRequirements(new Auth("Adm-Master")));
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -84,6 +113,7 @@ namespace FleetCommandAPI
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

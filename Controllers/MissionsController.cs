@@ -57,7 +57,7 @@ namespace FleetCommandAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<MissionReadDTO>>> getAllMissions()
+        public async Task<ActionResult<List<MissionReadDTOWithStarships>>> getAllMissions()
         {
             var missions = await _fleetStarShipsContext.missions.Include(c => c.starships).Include(p => p.Planet).ToListAsync();
 

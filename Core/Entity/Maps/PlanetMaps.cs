@@ -22,7 +22,7 @@ namespace FleetCommandAPI.Core.Entity.Maps
                     Name = p.Name,
                     Population = p.Population,
                     Terrain = p.Terrain,
-                    missions = p.missions.Select(m => new MissionReadDTOWithoutList
+                    missions = p.missions.Select(m => new MissionReadDTO
                     {
                         Id = m.Id,
                         Title = m.Title,
@@ -46,7 +46,7 @@ namespace FleetCommandAPI.Core.Entity.Maps
                 Population = planetModel.Population,
                 Terrain = planetModel.Terrain,
                 Url = planetModel.Url,
-                missions = planetModel.missions.Select(m => new MissionReadDTOWithoutList
+                missions = planetModel.missions.Select(m => new MissionReadDTO
                 {
                     Id = m.Id,
                     Title = m.Title,

@@ -32,9 +32,9 @@ namespace FleetCommandAPI.Core.Model.Maps
 
 
 
-        public List<MissionReadDTO> missionModelToMissionReadDTO(List<MissionsModel> missionsModel)
+        public List<MissionReadDTOWithStarships> missionModelToMissionReadDTO(List<MissionsModel> missionsModel)
         {
-            var missionReadDTO = missionsModel.Select(m => new MissionReadDTO
+            var missionReadDTO = missionsModel.Select(m => new MissionReadDTOWithStarships
             {
                 Id = m.Id,
                 Title = m.Title,
@@ -60,10 +60,10 @@ namespace FleetCommandAPI.Core.Model.Maps
         }
 
 
-        public MissionReadDTO missionModelToMissionReadDTO(MissionsModel mission)
+        public MissionReadDTOWithStarships missionModelToMissionReadDTO(MissionsModel mission)
         {
 
-            var missionReadDto = new MissionReadDTO
+            var missionReadDto = new MissionReadDTOWithStarships
             {
                 Id = mission.Id,
                 Title = mission.Title,

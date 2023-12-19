@@ -20,6 +20,6 @@ namespace FleetCommandAPI.Model.DTO.Planet
         public string? Url { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<MissionReadDTOWithoutList>? missions { get; set; }
+        public List<MissionReadDTO>? missions { get; set; }
     }
 }

@@ -24,7 +24,6 @@ namespace FleetCommandAPI.Core.Services
             UserModel userModel = new UserModel
             {
                 UserName = dto.UserName,
-                
             };
 
             IdentityResult result = await _userManager.CreateAsync(userModel, dto.Password);
@@ -33,28 +32,28 @@ namespace FleetCommandAPI.Core.Services
 
         public async Task<string> Login(LoginDto loginDto)
         {
-            var result = await _signInManager.PasswordSignInAsync(loginDto.userName, loginDto.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(loginDto.userName, loginDto.Password, false, true);
 
             if (!result.Succeeded)
             {
                 if (result.IsLockedOut)
                 {
-                    // A conta está bloqueada devido a tentativas malsucedidas.
+
                     throw new ApplicationException("Conta bloqueada");
                 }
                 else if (result.IsNotAllowed)
                 {
-                    // O usuário não está autorizado a fazer login.
+                    
                     throw new ApplicationException("Login não permitido");
                 }
                 else if (result.RequiresTwoFactor)
                 {
-                    // A autenticação em duas etapas é necessária.
+                    
                     throw new ApplicationException("Autenticação em duas etapas necessária");
                 }
                 else
                 {
-                    // Tratamento genérico para outros cenários de erro.
+                    
                     throw new ApplicationException("Erro durante o login");
                 }
             }

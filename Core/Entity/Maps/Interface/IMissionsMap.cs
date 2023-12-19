@@ -10,8 +10,8 @@ namespace FleetCommandAPI.Core.Entity.Maps
     public interface IMissionsMap
     {
         MissionsModel missionDtoToMissionModel(MissionDto missaionDto, PlanetModel planetModel);
-        List<MissionReadDTO> missionModelToMissionReadDTO(List<MissionsModel> missionsModel);
+        List<MissionReadDTOWithStarships> missionModelToMissionReadDTO(List<MissionsModel> missionsModel);
 
-        public MissionReadDTO missionModelToMissionReadDTO(MissionsModel mission);
+        public MissionReadDTOWithStarships missionModelToMissionReadDTO(MissionsModel mission);
     }
 }

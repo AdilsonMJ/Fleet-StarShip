@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
 using FleetCommandAPI.Core.Entity.Maps.Interface;
+using Microsoft.AspNetCore.Authorization;
+using FleetCommandAPI.Core.Repository;
 
 
 
@@ -22,13 +24,22 @@ namespace FleetCommandAPI.Controllers
         private readonly FleetStarShipsContext _starshipContext;
         private readonly IStarshipMap _starshipMap;
 
+        private readonly IStarshipRepository _starshipRepository;
 
-        public StarshipController(IStarshipIntegration starshipIntegration, FleetStarShipsContext fleetStarShipsContext, IPlanetIntegration planetIntegration, IStarshipMap starshipMap)
+
+        public StarshipController(
+            IStarshipIntegration starshipIntegration,
+            FleetStarShipsContext fleetStarShipsContext,
+            IPlanetIntegration planetIntegration,
+            IStarshipMap starshipMap, 
+            IStarshipRepository starshipRepository
+           )
         {
             _startshipIntegration = starshipIntegration;
             _starshipContext = fleetStarShipsContext;
             _planetIntegration = planetIntegration;
             _starshipMap = starshipMap;
+            _starshipRepository = starshipRepository;
         }
 
 
@@ -36,16 +47,10 @@ namespace FleetCommandAPI.Controllers
         public async Task<ActionResult<List<StarshipsResponse>>> getAllStarships()
         {
 
-            try
-            {
-                var existStarShips = await _starshipContext.ships.Include(c => c.missionsModels).ToListAsync();
-                var starshipRead = _starshipMap.starshipModelToStarshipReadWithouListDto(existStarShips);
-                return Ok(starshipRead);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error accessing the database when retrieving all starships.");
-            }
+            var startShips = await _starshipRepository.GetAllStarshipsWithMissions();
+
+            return Ok (startShips);
+
         }
 
         [HttpPost]
@@ -125,6 +130,7 @@ namespace FleetCommandAPI.Controllers
 
 
         [HttpGet("import-data")]
+        [Authorize(policy: "Adm-Master")]
         public async Task<ActionResult> importData()
         {
 
@@ -133,7 +139,6 @@ namespace FleetCommandAPI.Controllers
             {
                 return BadRequest();
             }
-
 
             var startShipSave = _starshipMap.starshipResponseToStarshipModel(response);
 
