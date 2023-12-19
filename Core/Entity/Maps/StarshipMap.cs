@@ -18,7 +18,7 @@ namespace FleetCommandAPI.Core.Entity.Maps
         }
 
 
-       public IEnumerable<StarshipReadWithMissions> starshipModelToStarshipReadWithMissions(List<StarshipModel> starshipModels)
+        public IEnumerable<StarshipReadWithMissions> starshipModelToStarshipReadWithMissions(List<StarshipModel> starshipModels)
         {
 
             var starshipRead = starshipModels.Select(e => new StarshipReadWithMissions
@@ -40,6 +40,27 @@ namespace FleetCommandAPI.Core.Entity.Maps
 
             return starshipRead;
 
+        }
+
+        public StarshipReadWithMissions starshipModelToStarshipReadWithMissions(StarshipModel starshipModel)
+        {
+            var starShip = new StarshipReadWithMissions
+            {
+                 id = starshipModel.id,
+                name = starshipModel.name,
+                model = starshipModel.model,
+                manufacturer = starshipModel.manufacturer,
+                missionsModels = starshipModel.missionsModels.Select(r => new MissionReadDTO
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Planet = r.Planet,
+                    Goal = r.Goal,
+                    Url = _linkService.GenerateMissionsLink(r.Id)
+                }).ToList()
+            };
+
+            return starShip;
         }
 
         public List<StarshipModel> starshipResponseToStarshipModel(List<StarshipsResponse> starshipsResponses)
@@ -87,5 +108,7 @@ namespace FleetCommandAPI.Core.Entity.Maps
                 model = starshipModel.model
             };
         }
+
+
     }
 }

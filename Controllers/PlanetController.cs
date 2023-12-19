@@ -1,6 +1,7 @@
 using FleetCommandAPI.Core.Entity.Maps;
 using FleetCommandAPI.Data;
 using FleetCommandAPI.Integration.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,7 @@ namespace FleetCommandAPI.Controllers
         }
 
         [HttpGet("import-data")]
+        [Authorize(policy: "Adm-Master")]
         public async Task<ActionResult> importData()
         {
             var response = await _planetIntegration.getAllPlanet();

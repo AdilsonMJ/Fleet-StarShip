@@ -1,6 +1,5 @@
 
 using FleetCommandAPI.Core.Entity.Maps;
-using FleetCommandAPI.Core.Model.Maps;
 using FleetCommandAPI.Data;
 using FleetCommandAPI.Model;
 using FleetCommandAPI.Model.DTO;

@@ -11,6 +11,7 @@ namespace FleetCommandAPI.Core.Entity.Maps.Interface
     public interface IStarshipMap
     {
         IEnumerable<StarshipReadWithMissions> starshipModelToStarshipReadWithMissions(List<StarshipModel> starshipModels);
+        StarshipReadWithMissions starshipModelToStarshipReadWithMissions(StarshipModel starshipModel);
 
         List<StarshipModel> starshipResponseToStarshipModel (List<StarshipsResponse> starshipsResponses);
 

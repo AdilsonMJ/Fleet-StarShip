@@ -19,26 +19,11 @@ namespace FleetCommandAPI.Controllers
     public class StarshipController : Controller
     {
 
-        private readonly IStarshipIntegration _startshipIntegration;
-        private readonly IPlanetIntegration _planetIntegration;
-        private readonly FleetStarShipsContext _starshipContext;
-        private readonly IStarshipMap _starshipMap;
-
         private readonly IStarshipRepository _starshipRepository;
 
 
-        public StarshipController(
-            IStarshipIntegration starshipIntegration,
-            FleetStarShipsContext fleetStarShipsContext,
-            IPlanetIntegration planetIntegration,
-            IStarshipMap starshipMap, 
-            IStarshipRepository starshipRepository
-           )
+        public StarshipController(IStarshipRepository starshipRepository)
         {
-            _startshipIntegration = starshipIntegration;
-            _starshipContext = fleetStarShipsContext;
-            _planetIntegration = planetIntegration;
-            _starshipMap = starshipMap;
             _starshipRepository = starshipRepository;
         }
 
@@ -49,66 +34,48 @@ namespace FleetCommandAPI.Controllers
 
             var startShips = await _starshipRepository.GetAllStarshipsWithMissions();
 
-            return Ok (startShips);
+            return Ok(startShips);
 
         }
 
         [HttpPost]
         public async Task<ActionResult> AddStarShip([FromBody] StarshipDTO starshipDTO)
         {
-            starshipDTO.id = new Random().Next(100, int.MaxValue);
+            var response = _starshipRepository.Save(starshipDTO).Result;
 
-            StarshipModel starShipModel = _starshipMap.StarshipDtoToStarshipModel(starshipDTO);
-            await _starshipContext.AddAsync(starShipModel);
-            await _starshipContext.SaveChangesAsync();
-            return CreatedAtAction(nameof(getById), new { id = starShipModel.id }, starShipModel);
+            if (response is null) return BadRequest("Error: The starship may already exist.");
+
+            return CreatedAtAction(nameof(getById), new { id = response }, starshipDTO);
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult> getById(int id)
         {
-            var starShip = await _starshipContext.ships.Include(s => s.missionsModels).FirstOrDefaultAsync(c => c.id == id);
-            if (starShip == null) return NotFound();
-            var starshipRead = _starshipMap.StarshipModelToStarshipReadDto(starShip);
-            return Ok(starshipRead);
+            var result = _starshipRepository.GetByID(id).Result;
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
         }
 
         [HttpPatch("{id}")]
         public async Task<ActionResult> UpDateStarShipPatch(int id, [FromBody] JsonPatchDocument<StarshipDTO> patch)
         {
 
-            var starShip = await _starshipContext.ships.FirstOrDefaultAsync(c => c.id == id);
-            if (starShip == null) return NotFound();
+            bool starhip = _starshipRepository.UpdateByPatch(id, patch).Result;
 
-
-            StarshipDTO starshipDTO = _starshipMap.starshipModelToStarshipDto(starShip);
-            patch.ApplyTo(starshipDTO, ModelState);
-            if (!TryValidateModel(starshipDTO)) return ValidationProblem(ModelState);
-
-            starShip.id = starshipDTO.id;
-            starShip.name = starshipDTO.name;
-            starShip.manufacturer = starshipDTO.manufacturer;
-            starShip.model = starshipDTO.model;
-
-            await _starshipContext.SaveChangesAsync();
+            if(starhip is false) return BadRequest();
             return NoContent();
         }
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpDatestarship(int id, [FromBody] StarshipDTO starshipDto)
+        public async Task<ActionResult> UpDateStarship(int id, [FromBody] StarshipDTO starshipDto)
         {
-            var starship = await _starshipContext.ships.FirstOrDefaultAsync(c => c.id == id);
-            if (starship == null) return NotFound();
-
-
-            starship.id = id;
-            starship.name = starshipDto.name;
-            starship.model = starshipDto.model;
-            starship.manufacturer = starshipDto.manufacturer;
-
-            await _starshipContext.SaveChangesAsync();
+            bool starship =  _starshipRepository.Update(id, starshipDto).Result;
+            if (starship is false) return NotFound();
+            
             return NoContent();
 
         }
@@ -117,35 +84,13 @@ namespace FleetCommandAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var starship = await _starshipContext.ships.FindAsync(id);
-            if (starship == null) return NotFound();
+            bool result = _starshipRepository.Delete(id).Result;
 
-            _starshipContext.ships.Remove(starship);
-            await _starshipContext.SaveChangesAsync();
+            if (result is false) return NotFound();
 
             return NoContent();
 
         }
 
-
-
-        [HttpGet("import-data")]
-        [Authorize(policy: "Adm-Master")]
-        public async Task<ActionResult> importData()
-        {
-
-            var response = await _startshipIntegration.getAllStarships();
-            if (response == null)
-            {
-                return BadRequest();
-            }
-
-            var startShipSave = _starshipMap.starshipResponseToStarshipModel(response);
-
-            await _starshipContext.ships.AddRangeAsync(startShipSave);
-            await _starshipContext.SaveChangesAsync();
-
-            return NoContent();
-        }
     }
 }
