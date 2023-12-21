@@ -1,12 +1,8 @@
 
-using FleetCommandAPI.Core.Entity.Maps;
-using FleetCommandAPI.Data;
-using FleetCommandAPI.Model;
+
+using FleetCommandAPI.Core.Repository.Missions;
 using FleetCommandAPI.Model.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-
 
 namespace FleetCommandAPI.Controllers
 {
@@ -14,67 +10,34 @@ namespace FleetCommandAPI.Controllers
     public class MissionsController : Controller
     {
 
-        private readonly FleetStarShipsContext _fleetStarShipsContext;
-        private readonly IMissionsMap _missionsMap;
+        private readonly IMissionsRepository _missionsRepository;
 
-        public MissionsController(FleetStarShipsContext fleetStarShipsContext, IMissionsMap missionsMap)
+        public MissionsController(IMissionsRepository missionsRepository)
         {
-            _fleetStarShipsContext = fleetStarShipsContext;
-            _missionsMap = missionsMap;
-
-
+            _missionsRepository = missionsRepository;
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveMissions([FromBody] MissionDto missaionDto)
         {
-
-            var planet = await _fleetStarShipsContext.planet.FirstOrDefaultAsync(p => p.id == missaionDto.Planet.id);
-
-            if (planet == null) return NotFound();
-
-            // MissionsModel missions = MissionsMaps.missionDtoToMissionModel(missaionDto, planet);
-            // foreach (int shipId in missaionDto.starshipsId)
-            // {
-            //     var ship = await _fleetStarShipsContext.ships.FindAsync(shipId);
-            //     if (ship != null)
-            //     {
-            //         missions.starships.Add(ship);
-            //     }
-            //     else
-            //     {
-            //         return BadRequest($"The start Ship #{shipId} not exist!");
-            //     }
-            // }
-
-            MissionsModel missions = _missionsMap.missionDtoToMissionModel(missaionDto, planet);
-
-            await _fleetStarShipsContext.missions.AddAsync(missions);
-            await _fleetStarShipsContext.SaveChangesAsync();
-
+            bool result = _missionsRepository.Save(missaionDto).Result;
+            if (result == false) return BadRequest();
             return Ok();
         }
 
         [HttpGet]
         public async Task<ActionResult<List<MissionReadDTOWithStarships>>> getAllMissions()
         {
-            var missions = await _fleetStarShipsContext.missions.Include(c => c.starships).Include(p => p.Planet).ToListAsync();
-
-            var missaionReadDTO = _missionsMap.missionModelToMissionReadDTO(missions);
-
-            return Ok(missaionReadDTO);
-
+            var missions = await _missionsRepository.GetAllMissions();
+            return Ok(missions);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> getById(int id)
         {
-            var mission = await _fleetStarShipsContext.missions.Include(s => s.starships).Include(p => p.Planet).FirstOrDefaultAsync(e => e.Id == id);
-            if (mission == null) return BadRequest();
-
-            var missionReadDTO = _missionsMap.missionModelToMissionReadDTO(mission);
-
-            return Ok(missionReadDTO);
+            var mission = _missionsRepository.GetById(id).Result;
+            if (mission == null) return NotFound();
+            return Ok(mission);
 
         }
     }

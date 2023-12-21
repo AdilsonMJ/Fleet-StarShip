@@ -9,7 +9,7 @@ namespace FleetCommandAPI.Core.Model.Maps
 {
     public class MissionsMap : IMissionsMap
     {
-        
+
 
         private readonly ILinkService _linkService;
 
@@ -18,7 +18,7 @@ namespace FleetCommandAPI.Core.Model.Maps
             _linkService = linkService;
         }
 
-        public MissionsModel missionDtoToMissionModel(MissionDto missaionDto, PlanetModel planetModel)
+        public MissionsModel missionDtoToMissionModel(MissionDto missaionDto, PlanetModel planetModel, List<StarshipModel> starshipModels)
         {
             MissionsModel missions = new MissionsModel
             {
@@ -27,12 +27,17 @@ namespace FleetCommandAPI.Core.Model.Maps
                 Goal = missaionDto.Goal,
             };
 
+            foreach (var star in starshipModels)
+            {
+                missions.starships.Add(star);
+            }
+
             return missions;
         }
 
 
 
-        public List<MissionReadDTOWithStarships> missionModelToMissionReadDTO(List<MissionsModel> missionsModel)
+        public List<MissionReadDTOWithStarships> missionModelToMissionReadDTOWithStarships(List<MissionsModel> missionsModel)
         {
             var missionReadDTO = missionsModel.Select(m => new MissionReadDTOWithStarships
             {
@@ -60,7 +65,7 @@ namespace FleetCommandAPI.Core.Model.Maps
         }
 
 
-        public MissionReadDTOWithStarships missionModelToMissionReadDTO(MissionsModel mission)
+        public MissionReadDTOWithStarships missionModelToMissionReadDTOWithStarships(MissionsModel mission)
         {
 
             var missionReadDto = new MissionReadDTOWithStarships

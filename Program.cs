@@ -25,6 +25,8 @@ using FleetCommandAPI.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using FleetCommandAPI.Core.Repository;
 using FleetCommandAPI.Core.Repository.ImportData;
+using FleetCommandAPI.Core.Repository.Planet;
+using FleetCommandAPI.Core.Repository.Missions;
 
 namespace FleetCommandAPI
 {
@@ -66,6 +68,8 @@ namespace FleetCommandAPI
             builder.Services.AddScoped<IAuthorizationHandler, LoadDataAuthorization>();
             builder.Services.AddScoped<IStarshipRepository, StarshipRepositoryImpl>();
             builder.Services.AddScoped<IImportDataRepository, ImportDataRepositoryImpl>();
+            builder.Services.AddScoped<IPlanetRepository, PlanetRepositoryImpl>();
+            builder.Services.AddScoped<IMissionsRepository, MissionsRepositoryImpl>();
 
             builder.Services.AddIdentity<UserModel, IdentityRole>()
             .AddEntityFrameworkStores<UserDbContext>()

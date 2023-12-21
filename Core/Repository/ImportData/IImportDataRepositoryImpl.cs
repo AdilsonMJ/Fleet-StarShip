@@ -1,8 +1,6 @@
 using FleetCommandAPI.Core.Entity.Maps;
 using FleetCommandAPI.Core.Entity.Maps.Interface;
 using FleetCommandAPI.Data;
-using FleetCommandAPI.Integration;
-using FleetCommandAPI.Integration.Integration;
 using FleetCommandAPI.Integration.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +12,6 @@ namespace FleetCommandAPI.Core.Repository.ImportData
         private readonly IPlanetIntegration _planetIntegration;
         private readonly IStarshipIntegration _startshipIntegration;
         private readonly FleetStarShipsContext _dbContext;
-
         private readonly IStarshipMap _starshipMap;
         private readonly IPlanetMaps _planetMaps;
 
@@ -33,8 +30,6 @@ namespace FleetCommandAPI.Core.Repository.ImportData
         }
 
 
-
-        // I have to validate whether the data does not exist in the database.
         public async Task<bool> GetStarshipsResponses()
         {
             var response = _startshipIntegration.getAllStarships().Result;
@@ -52,14 +47,8 @@ namespace FleetCommandAPI.Core.Repository.ImportData
                     await _dbContext.SaveChangesAsync();
                 }
             }
-
-            
-
             return true;
         }
-
-
-        // Planets 
 
         public async Task<bool> GetPlanetsResponse()
         {
@@ -67,7 +56,6 @@ namespace FleetCommandAPI.Core.Repository.ImportData
             if (response == null) return false;
 
             var planetsModel = _planetMaps.planetResponseToPlanetModel(response);
-
 
             foreach (var p in planetsModel)
             {
@@ -78,9 +66,7 @@ namespace FleetCommandAPI.Core.Repository.ImportData
                     await _dbContext.AddAsync(p);
                     await _dbContext.SaveChangesAsync();
                 }
-
             }
-
             return true;
 
         }

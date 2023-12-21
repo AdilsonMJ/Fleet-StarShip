@@ -13,7 +13,7 @@ namespace FleetCommandAPI.Model.DTO
         public string? Title { get; set; }
 
         [Required(ErrorMessage = "The Planet is required!")]
-        public PlanetModel? Planet { set; get; }
+        public int planetId { set; get; }
 
         [Required(ErrorMessage = "The goal is required!")]
         [MaxLength(30)]

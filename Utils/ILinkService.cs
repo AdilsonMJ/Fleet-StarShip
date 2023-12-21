@@ -9,7 +9,6 @@ namespace FleetCommandAPI.Utils
     {
         string GeneratePlanetLink(int planetId);
         string GeneratesStarshipLink(int startshipId);
-
         string GenerateMissionsLink(int missionId);
     }
 }

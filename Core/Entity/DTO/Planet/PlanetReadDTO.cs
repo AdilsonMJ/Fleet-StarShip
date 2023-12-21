@@ -16,9 +16,7 @@ namespace FleetCommandAPI.Model.DTO.Planet
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? Terrain { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-
         public string? Url { get; set; }
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<MissionReadDTO>? missions { get; set; }
     }

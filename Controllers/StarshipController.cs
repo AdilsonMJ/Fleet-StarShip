@@ -1,14 +1,8 @@
-using FleetCommandAPI.Data;
-using FleetCommandAPI.Integration.Interface;
+
 using FleetCommandAPI.Integration.Response.Refit;
-using FleetCommandAPI.Model;
 using FleetCommandAPI.Model.DTO;
-using FleetCommandAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.JsonPatch;
-using FleetCommandAPI.Core.Entity.Maps.Interface;
-using Microsoft.AspNetCore.Authorization;
 using FleetCommandAPI.Core.Repository;
 
 
