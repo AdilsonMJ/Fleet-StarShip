@@ -4,8 +4,6 @@ using FleetCommandAPI.Data;
 using FleetCommandAPI.Model;
 using FleetCommandAPI.Model.DTO;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace FleetCommandAPI.Core.Repository
@@ -33,7 +31,7 @@ namespace FleetCommandAPI.Core.Repository
         {
             var result = await _DbContext.ships.Include(m => m.missionsModels).FirstOrDefaultAsync(s => s.id == id);
 
-            if (result is null) return null;
+            if (result == null) return null;
 
             var starshipRead = _starshipMap.starshipModelToStarshipReadWithMissions(result);
 
@@ -63,7 +61,7 @@ namespace FleetCommandAPI.Core.Repository
         public async Task<bool> Delete(int id)
         {
             var starship = await _DbContext.ships.FirstOrDefaultAsync(m => m.id == id);
-            if (starship is null) return false;
+            if (starship == null) return false;
 
             _DbContext.ships.Remove(starship);
             await _DbContext.SaveChangesAsync();
@@ -74,7 +72,7 @@ namespace FleetCommandAPI.Core.Repository
         public async Task<bool> Update(int id, StarshipDTO starshipDTO)
         {
             var starship = await _DbContext.ships.FirstOrDefaultAsync(c => c.id == id);
-            if (starship is null) return false;
+            if (starship == null) return false;
 
             if (starship.name != starshipDTO.name || starship.model != starshipDTO.model)
             {
@@ -94,7 +92,7 @@ namespace FleetCommandAPI.Core.Repository
         public async Task<bool> UpdateByPatch(int id, JsonPatchDocument<StarshipDTO> patch)
         {
             var starShipModel = await _DbContext.ships.FirstOrDefaultAsync(s => s.id == id);
-            if (starShipModel is null) return false;
+            if (starShipModel == null) return false;
 
             StarshipDTO starship = _starshipMap.starshipModelToStarshipDto(starShipModel);
             patch.ApplyTo(starship);

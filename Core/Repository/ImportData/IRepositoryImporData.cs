@@ -7,8 +7,9 @@ using FleetCommandAPI.Integration.Response.Refit;
 namespace FleetCommandAPI.Core.Repository.ImportData
 {
 
-    public interface IRepositoryImporData
+    public interface IImportDataRepository
     {
         Task<bool> GetStarshipsResponses();
+        Task<bool> GetPlanetsResponse();
     }
 }
