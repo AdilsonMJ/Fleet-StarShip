@@ -20,13 +20,12 @@ namespace FleetCommandAPI.Authorization
             _userManager = userManager;
         }
 
-
         protected override async Task<Task> HandleRequirementAsync(AuthorizationHandlerContext context, Auth requirement)
         {
             var username = context.User.FindFirst(c => c.Type == "userName").Value;
             var user = await _userManager.Users.FirstOrDefaultAsync(n => n.UserName == username);
 
-            if (user.Authorization == "Adm-Master")
+            if (user.Authorization == requirement.Authorization)
             {
                 context.Succeed(requirement);
             }

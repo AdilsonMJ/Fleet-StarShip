@@ -27,6 +27,7 @@ using FleetCommandAPI.Core.Repository;
 using FleetCommandAPI.Core.Repository.ImportData;
 using FleetCommandAPI.Core.Repository.Planet;
 using FleetCommandAPI.Core.Repository.Missions;
+using FleetCommandAPI.Core.Repository.User;
 
 namespace FleetCommandAPI
 {
@@ -63,13 +64,15 @@ namespace FleetCommandAPI
             builder.Services.AddScoped<IMissionsMap, MissionsMap>();
             builder.Services.AddScoped<IPlanetMaps, PlanetMaps>();
             builder.Services.AddScoped<IStarshipMap, StarshipMap>();
-            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<UserLoginRegister>();
             builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<IAuthorizationHandler, LoadDataAuthorization>();
             builder.Services.AddScoped<IStarshipRepository, StarshipRepositoryImpl>();
             builder.Services.AddScoped<IImportDataRepository, ImportDataRepositoryImpl>();
             builder.Services.AddScoped<IPlanetRepository, PlanetRepositoryImpl>();
             builder.Services.AddScoped<IMissionsRepository, MissionsRepositoryImpl>();
+            builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();
+
 
             builder.Services.AddIdentity<UserModel, IdentityRole>()
             .AddEntityFrameworkStores<UserDbContext>()

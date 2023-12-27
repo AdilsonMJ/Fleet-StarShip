@@ -1,5 +1,10 @@
-using FleetCommandAPI.Core.Entity.User.DTO;
-using FleetCommandAPI.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FleetCommandAPI.Core.Repository.User;
+using FleetCommandAPI.RegisterAndLogin.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetCommandAPI.Controllers
@@ -8,37 +13,36 @@ namespace FleetCommandAPI.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserRepository _userRepository;
 
-        private readonly UserService _userService;
-
-        public UserController(UserService userService )
+        public UserController(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
         {
-            _userService = userService;
-            
+            _httpContextAccessor = httpContextAccessor;
+            _userRepository = userRepository;
         }
 
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register(CreatedUserDto userDto)
+        [Authorize]
+        [HttpPost("PasswordChange")]
+        public async Task<IActionResult> ChangePassword(UserChangePasswordModelDto changePasswordModel)
         {
-            var result = await _userService.CreateUser(userDto);
+            
+             if(changePasswordModel.newPassword == changePasswordModel.OldPassword) return BadRequest();
 
-            if (!result.Succeeded)
-            {
-                var erros = result.Errors.Select(e => e.Description);
-                return BadRequest(new { Errors = erros });
-            }
+            var claimsIdentity = _httpContextAccessor.HttpContext.User.Identity as System.Security.Claims.ClaimsIdentity;
+            if (claimsIdentity == null) return BadRequest();
+            var userID = claimsIdentity.FindFirst("ID");
+            if(userID == null) return BadRequest();
+
+            var status = await _userRepository.ChangePassword(changePasswordModel, userID.Value);
+
+            if (status == false) return BadRequest();
 
             return NoContent();
+            
+
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
-        {
-            var token = await _userService.Login(loginDto);
-
-            return Ok(token);
-        
-        }
     }
 }

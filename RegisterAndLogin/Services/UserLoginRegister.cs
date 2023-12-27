@@ -1,18 +1,21 @@
+using System.Security.Claims;
 using FleetCommandAPI.Core.Entity.User;
 using FleetCommandAPI.Core.Entity.User.DTO;
+using FleetCommandAPI.RegisterAndLogin.User;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 
 
 namespace FleetCommandAPI.Core.Services
 {
-    public class UserService
+    public class UserLoginRegister
     {
 
         private UserManager<UserModel> _userManager;
         private TokenService _tokenService;
         private SignInManager<UserModel> _signInManager;
 
-        public UserService(UserManager<UserModel> userManager, TokenService tokenService, SignInManager<UserModel> signInManager)
+        public UserLoginRegister(UserManager<UserModel> userManager, TokenService tokenService, SignInManager<UserModel> signInManager)
         {
             _userManager = userManager;
             _tokenService = tokenService;
@@ -53,7 +56,6 @@ namespace FleetCommandAPI.Core.Services
                 }
                 else
                 {
-                    
                     throw new ApplicationException("Erro durante o login");
                 }
             }

@@ -81,7 +81,6 @@ D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.MvcApplicat
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.MvcApplicationPartsAssemblyInfo.cache
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.RazorAssemblyInfo.cache
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.RazorAssemblyInfo.cs
-D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.sourcelink.json
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.csproj.CopyComplete
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.dll
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\refint\Domain.dll
@@ -89,3 +88,6 @@ D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.pdb
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.genruntimeconfig.cache
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\ref\Domain.dll
 D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+d:\github\C#\FleetCommandAPI\FleetCommandAPI\obj\Debug\net7.0\Domain.sourcelink.json
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\BCrypt.Net.dll
+D:\github\C#\FleetCommandAPI\FleetCommandAPI\bin\Debug\net7.0\BCrypt.Net-Core.dll
